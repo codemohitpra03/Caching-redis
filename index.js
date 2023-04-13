@@ -7,10 +7,11 @@ const port = 8800
 
 
 app.use(express.json())
-
+app.use(express.static('home'))
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
+    
 })
 app.use('/api/product', productRoute)
 app.use('/api/cart', cartRoute)

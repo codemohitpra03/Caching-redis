@@ -1,5 +1,5 @@
 import express from "express"
-import { getAllCarts, getCart, getInDateRange } from "../controllers/cart.js";
+import { getAllCarts, getCart } from "../controllers/cart.js";
 const router = express.Router();
 
 
@@ -7,8 +7,7 @@ const router = express.Router();
 router.get('/',getAllCarts);
 //get single cart
 router.get('/:id',getCart);
-//get carts in date range
-router.get('/:startdate/:enddate',getInDateRange);
+
 
 // module.exports = router;
 export default router;

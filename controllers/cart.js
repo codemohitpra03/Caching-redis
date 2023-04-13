@@ -1,11 +1,15 @@
 import decycle from 'json-stringify-safe';
 import axios from "axios"
+import { getOrSetCache } from './cache.js';
 
 export const getAllCarts = async (req, res)=>{
     try {
-        const result = await axios('https://fakestoreapi.com/carts')
-        console.log(result)
-        res.status(200).json(JSON.parse(decycle(result.data)))
+        const carts = await getOrSetCache(`carts`,async ()=>{
+            const result = await axios('https://fakestoreapi.com/carts')
+            // console.log(result)
+            return result;
+        })
+        res.status(200).json(carts)
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some error occured - Cannot get carts");      
@@ -15,22 +19,16 @@ export const getAllCarts = async (req, res)=>{
 
 export const getCart = async (req,res)=>{
     try {
-        const result = await axios(`https://fakestoreapi.com/carts/${req.params.id}`)
-        console.log(result)
-        res.status(200).json(JSON.parse(decycle(result.data)))
+        
+        const cart = await getOrSetCache(`carts?id=${req.params.id}`,async ()=>{
+            const result = await axios(`https://fakestoreapi.com/carts/${req.params.id}`)
+            console.log(result)
+            return result
+        })
+        res.status(200).json(cart)
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some error occured - cannot get cart");      
     }
 }
 
-export const getInDateRange = async (req,res)=>{
-    try {
-        const result = await axios(`https://fakestoreapi.com/carts?startdate=${req.params.startdate}&enddate=${req.params.enddate}`)
-        console.log(result)
-        res.status(200).json(JSON.parse(decycle(result.data)))
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).send("Some error occured - cannot get cart");      
-    }
-}
